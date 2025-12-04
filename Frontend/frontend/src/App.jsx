@@ -22,6 +22,7 @@ import ServiceManagement from './Admin/Pages/service.jsx';
 // Doctor components
 import DoctorDashboard from './pages/Doctor/doctordashboard.jsx';
 import { toast } from 'react-toastify';
+import API from './api/axios.js';
 import axios from 'axios';
 
 const App = () => {
@@ -36,17 +37,17 @@ const App = () => {
         const token = localStorage.getItem('token');
         if (token) {
           // Set the default Authorization header for all axios requests
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
           // Fetch user data
-          const response = await axios.get('http://localhost:5000/api/auth/me');
+          const response = await API.get('/auth/me');
           setUser(response.data);
           setIsAuthenticated(true);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
         localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
+        delete API.defaults.headers.common['Authorization'];
       } finally {
         setLoading(false);
       }
@@ -57,14 +58,14 @@ const App = () => {
 
   const handleLogin = (userData, token) => {
     localStorage.setItem('token', token);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(userData);
     setIsAuthenticated(true);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
+    delete API.defaults.headers.common['Authorization'];
     setUser(null);
     setIsAuthenticated(false);
     toast.success('Logged out successfully');
