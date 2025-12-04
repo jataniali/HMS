@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserShield, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import API from '../../api/axios.js';
 
 const Login = ({ onLoginSuccess }) => {
   const [formData, setFormData] = useState({
@@ -36,7 +36,7 @@ const Login = ({ onLoginSuccess }) => {
     
     try {
       console.log('Sending login request...');
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await API.post('/auth/login', {
         email,
         password,
       });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaPhone, FaLock, FaVenusMars, FaStethoscope } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import API from '../../api/axios.js';
 
 const Signup = ({ onSignupSuccess }) => {
   const [formData, setFormData] = useState({
@@ -46,7 +46,7 @@ const Signup = ({ onSignupSuccess }) => {
     try {
       console.log('Sending registration request...');
       // First register the user
-      const registerResponse = await axios.post('http://localhost:5000/api/auth/register', {
+      const registerResponse = await API.post('/auth/register', {
         username,
         email,
         password,
@@ -61,7 +61,7 @@ const Signup = ({ onSignupSuccess }) => {
       if (registerResponse.data.success) {
         console.log('Registration successful, attempting login...');
         // After successful registration, automatically log the user in
-        const loginResponse = await axios.post('http://localhost:5000/api/auth/login', {
+        const loginResponse = await API.post('/auth/login', {
           email,
           password,
         });
