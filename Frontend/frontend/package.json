@@ -8,7 +8,7 @@
     "build": "npm install && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "serve -s dist -p 5000 --no-clipboard & sleep 10 && node healthcheck.js"
+    "start": "npx serve -s dist -p 5000 --single"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
