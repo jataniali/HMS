@@ -22,7 +22,11 @@ res.send('hello dev')
 
 // CORS configuration
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Add your frontend URL(s) here
+  origin: [
+    'http://localhost:5173', 
+    'http://127.0.0.1:5173',
+    process.env.FRONTEND_URL
+  ].filter(Boolean), // Filter out undefined/null
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
   credentials: true, // Enable if you're using cookies/sessions
