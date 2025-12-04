@@ -183,8 +183,8 @@ try {
  return res.status(404).json({message:"Appointment not found or not assigned to you"});
  }
  
- // Use appointment ID as patient ID if no real patient exists (for dummy patients)
- const finalPatientId = patientId || appointmentId;
+ // Use the actual patient from the appointment
+ const finalPatientId = appointment.patient || appointmentId;
  
  const newBill = new Bills({
  patient: finalPatientId,
