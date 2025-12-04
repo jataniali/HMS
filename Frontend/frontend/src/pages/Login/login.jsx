@@ -89,7 +89,7 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-<div className="min-h-screen flex items-center justify-center bg-linear-to-r
+<div className="min-h-screen flex items-center justify-center bg-gradient-to-r
  from-sky-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
 <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl">
 <div className="text-center">
@@ -196,10 +196,11 @@ const Login = ({ onLoginSuccess }) => {
               disabled={loading}
               className={`group relative w-full flex justify-center py-3 px-4 border
                  border-transparent text-sm font-medium rounded-lg
-                  text-white bg-linear-to-r from-sky-500 to-blue-600
+                  text-white bg-gradient-to-r from-sky-500 to-blue-600
                    hover:from-sky-600 hover:to-blue-700 focus:outline-none 
                    focus:ring-2 focus:ring-offset-2
-                    focus:ring-sky-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    focus:ring-sky-500 disabled:opacity-70 disabled:cursor-not-allowed
+                    active:scale-95 transition-all duration-150 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
