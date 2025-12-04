@@ -5,12 +5,9 @@ import {upload } from '../controllers/uploadcontroller.js'
 
 const router= express.Router();
 
-router.use(verifytoken)
-
-
-router.post('/',upload.single("profileimage"), verifyrole("admin"),DoctorController.createDoctor);
-router.get('/' , verifyrole("admin","doctor","patient"),DoctorController.getAlldoctors);
-router.put('/:id' , verifyrole("admin"),DoctorController.updateDoctor);
-router.delete('/:id' , verifyrole("admin"),DoctorController.deleteDoctor);
+router.post('/',verifytoken, upload.single("profileimage"), verifyrole("admin"),DoctorController.createDoctor);
+router.get('/' , DoctorController.getAlldoctors); // Public access
+router.put('/:id' , verifytoken, verifyrole("admin"),DoctorController.updateDoctor);
+router.delete('/:id' , verifytoken, verifyrole("admin"),DoctorController.deleteDoctor);
 
 export default router;
