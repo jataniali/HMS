@@ -1,8 +1,7 @@
 services:
   # Frontend Service
-  - type: web
+  - type: static
     name: hms-frontend
-    env: static
     rootDir: Frontend/frontend
     buildCommand: npm run build
     publishPath: dist
@@ -10,27 +9,15 @@ services:
       - path: /*
     envVars:
       - key: VITE_API_URL
-        value: https://your-backend-url.onrender.com
+        value: https://hms-backend.onrender.com
 
   # Backend Service  
   - type: web
     name: hms-backend
-    env: node
+    runtime: node
     rootDir: backend
     buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 5000
-      - key: MONGODB_URI
-        sync: false
-      - key: JWT_SECRET
-        sync: false
-      - key: CLOUDINARY_CLOUD_NAME
-        sync: false
-      - key: CLOUDINARY_API_KEY
-        sync: false
-      - key: CLOUDINARY_API_SECRET
-        sync: false
