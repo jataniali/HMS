@@ -4,14 +4,11 @@ import { verifytoken, verifyrole } from '../middlewares/authmidlware.js';
 
 const router = express.Router();
 
-// Apply authentication middleware to all routes
-router.use(verifytoken);
-
 // Service routes
-router.post('/', verifyrole('admin'), ServiceController.createService);
-router.get('/', verifyrole('admin', 'doctor', 'patient'), ServiceController.getAllServices);
-router.get('/:id', verifyrole('admin', 'doctor'), ServiceController.getServiceById);
-router.put('/:id', verifyrole('admin'), ServiceController.updateService);
-router.delete('/:id', verifyrole('admin'), ServiceController.deleteService);
+router.post('/', verifytoken, verifyrole('admin'), ServiceController.createService);
+router.get('/', ServiceController.getAllServices); // Public access
+router.get('/:id', verifytoken, verifyrole('admin', 'doctor'), ServiceController.getServiceById);
+router.put('/:id', verifytoken, verifyrole('admin'), ServiceController.updateService);
+router.delete('/:id', verifytoken, verifyrole('admin'), ServiceController.deleteService);
 
 export default router;
