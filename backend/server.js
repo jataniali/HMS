@@ -25,7 +25,7 @@ const corsOptions = {
   origin: [
     'http://localhost:5173', 
     'http://127.0.0.1:5173',
-    'https://hms-frontend.onrender.com'
+    'https://hms-frontend-eov9.onrender.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
