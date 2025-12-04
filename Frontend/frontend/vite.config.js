@@ -5,4 +5,11 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 })
