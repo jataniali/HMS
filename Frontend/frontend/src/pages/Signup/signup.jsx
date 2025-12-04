@@ -44,7 +44,9 @@ const Signup = ({ onSignupSuccess }) => {
     setLoading(true);
     
     try {
-      console.log('Sending registration request...');
+      console.log('Sending registration request to:', API.defaults.baseURL + '/auth/register');
+      console.log('Request data:', { username, email, phone, age, gender, disease });
+      
       // First register the user
       const registerResponse = await API.post('/auth/register', {
         username,
@@ -61,6 +63,8 @@ const Signup = ({ onSignupSuccess }) => {
       if (registerResponse.data.success) {
         console.log('Registration successful, attempting login...');
         // After successful registration, automatically log the user in
+        console.log('Sending login request to:', API.defaults.baseURL + '/auth/login');
+        
         const loginResponse = await API.post('/auth/login', {
           email,
           password,

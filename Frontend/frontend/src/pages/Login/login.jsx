@@ -35,7 +35,9 @@ const Login = ({ onLoginSuccess }) => {
     setLoading(true);
     
     try {
-      console.log('Sending login request...');
+      console.log('Sending login request to:', API.defaults.baseURL + '/auth/login');
+      console.log('Request data:', { email });
+      
       const response = await API.post('/auth/login', {
         email,
         password,
