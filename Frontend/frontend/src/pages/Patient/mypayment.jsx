@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { FiDownload, FiFileText, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { paymentAPI } from '../../api/payments';
 import { toast } from 'react-toastify';
@@ -9,7 +9,7 @@ const MyPayment = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch payments from API
+  // Fetch payments from API with caching
   useEffect(() => {
     const fetchPayments = async () => {
       try {
@@ -18,8 +18,29 @@ const MyPayment = ({ user }) => {
           return;
         }
         
+        // Check cache first
+        const cacheKey = `payments_${user._id}`;
+        const cachedData = localStorage.getItem(cacheKey);
+        const cacheTimestamp = localStorage.getItem(`${cacheKey}_timestamp`);
+        
+        // Use cache if less than 5 minutes old
+        if (cachedData && cacheTimestamp) {
+          const cacheAge = Date.now() - parseInt(cacheTimestamp);
+          if (cacheAge < 300000) { // 5 minutes
+            setPayments(JSON.parse(cachedData));
+            setLoading(false);
+            return;
+          }
+        }
+        
         const response = await paymentAPI.getPatientPayments(user._id);
-        setPayments(response.payments || []);
+        const paymentsData = response.payments || [];
+        setPayments(paymentsData);
+        
+        // Cache the results
+        localStorage.setItem(cacheKey, JSON.stringify(paymentsData));
+        localStorage.setItem(`${cacheKey}_timestamp`, Date.now().toString());
+        
         setError(null);
       } catch (error) {
         console.error('Error fetching payments:', error);
@@ -33,13 +54,13 @@ const MyPayment = ({ user }) => {
     fetchPayments();
   }, [user]);
 
-  const handleDownloadReceipt = (receiptNumber) => {
+  const handleDownloadReceipt = useCallback((receiptNumber) => {
     // Implement receipt download logic here
     console.log('Downloading receipt:', receiptNumber);
     // This would typically generate or fetch a PDF receipt
-  };
+  }, []);
 
-  const statusIcon = (status) => {
+  const statusIcon = useCallback((status) => {
     return status === 'completed' ? (
       <FiCheckCircle className="text-green-500" />
     ) : status === 'pending' ? (
@@ -47,10 +68,10 @@ const MyPayment = ({ user }) => {
     ) : (
       <FiXCircle className="text-red-500" />
     );
-  };
+  }, []);
 
   // Format payment data for display
-  const formatPaymentData = (payment) => {
+  const formatPaymentData = useCallback((payment) => {
     return {
       id: payment._id,
       invoiceNumber: payment.bill ? `INV-${payment.bill._id?.toString().slice(-6).toUpperCase()}` : 'N/A',
@@ -60,9 +81,16 @@ const MyPayment = ({ user }) => {
       status: payment.paymentStatus || 'pending',
       receiptNumber: payment.mpesaReceiptNumber || `RCPT-${payment._id?.toString().slice(-6).toUpperCase()}`
     };
-  };
+  }, []);
 
-  const formattedPayments = payments.map(formatPaymentData);
+  const formattedPayments = useMemo(() => payments.map(formatPaymentData), [payments, formatPaymentData]);
+  
+  const totalPaidAmount = useMemo(() => {
+    return formattedPayments
+      .filter(p => p.status === 'completed')
+      .reduce((sum, payment) => sum + payment.amount, 0)
+      .toLocaleString();
+  }, [formattedPayments]);
 
   if (loading) {
     return (
@@ -100,10 +128,7 @@ const MyPayment = ({ user }) => {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold">
-                Ksh {formattedPayments
-                  .filter(p => p.status === 'completed')
-                  .reduce((sum, payment) => sum + payment.amount, 0)
-                  .toLocaleString()}
+                Ksh {totalPaidAmount}
               </p>
               <p className="text-sm text-gray-500">Total paid amount</p>
             </div>

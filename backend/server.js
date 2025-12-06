@@ -20,6 +20,15 @@ app.get('/',(req,res)=>{
 res.send('hello dev')
 })
 
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // CORS configuration
 const corsOptions = {
   origin: [
