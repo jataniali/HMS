@@ -30,14 +30,8 @@ export default defineConfig({
     },
     // Enable source maps for debugging
     sourcemap: true,
-    // Optimize build size
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.log in production
-        drop_debugger: true,
-      },
-    },
+    // Use default minifier instead of terser
+    minify: 'esbuild',
   },
   // Optimize dependencies
   optimizeDeps: {
